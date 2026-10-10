@@ -47,7 +47,7 @@ The focus of this project is:
 To run the project locally:
 
 ```bash
-git clone https://github.com/your-username/weather-app.git
+git clone https://github.com/Laloka2000/weather-app.git
 cd weather-app
 npm install
-npm run dev
+npm run serve

@@ -1,27 +1,31 @@
 <template>
-  <div id="app" class="weather-app">
-    <h1 class="app-title">Weather App 🌤</h1>
-
-    <div class="search-container">
-      <input v-model="city" @keyup.enter="fetchWeather" placeholder="Enter city name" class="city-input" />
-      <button @click="fetchWeather" class="search-btn">Get Weather</button>
-    </div>
-
-    <div v-if="weather" class="weather-info">
-      <h2>
-        <i class="fas fa-map-marker-alt"></i> {{ weather.name }}, {{ weather.sys.country }}
-      </h2>
-      <div class="weather-details">
-        <p><i class="fas fa-thermometer-half"></i> Temperature: {{ weather.main.temp }}°C</p>
-        <p><i class="fas fa-cloud"></i> Weather: {{ weather.weather[0].description }}</p>
-        <p><i class="fas fa-tint"></i> Humidity: {{ weather.main.humidity }}%</p>
-        <p><i class="fas fa-wind"></i> Wind Speed: {{ weather.wind.speed }} m/s</p>
+  <div class="weather-app" :class="weatherClass">
+    <main class="card">
+      <h1 class="app-title">Weather App 🌤</h1>
+  
+      <div class="search-container">
+        <input v-model="city" @keyup.enter="fetchWeather" placeholder="Enter city name" class="city-input" />
+        <button @click="fetchWeather" :disabled="loading" class="search-btn">
+          {{ loading ? "Loading..." : "Get Weather" }}
+        </button>
       </div>
-    </div>
-
-    <div v-if="error" class="error-message">
-      <p>{{ error }}</p>
-    </div>
+  
+      <div v-if="weather" class="weather-info">
+        <h2>
+          <i class="fas fa-map-marker-alt"></i> {{ weather.name }}, {{ weather.sys.country }}
+        </h2>
+        <div class="weather-details">
+          <p><i class="fas fa-thermometer-half"></i> Temperature: {{ weather.main.temp }}°C</p>
+          <p><i class="fas fa-cloud"></i> Weather: {{ weather.weather[0].description }}</p>
+          <p><i class="fas fa-tint"></i> Humidity: {{ weather.main.humidity }}%</p>
+          <p><i class="fas fa-wind"></i> Wind Speed: {{ weather.wind.speed }} m/s</p>
+        </div>
+      </div>
+  
+      <div v-if="error" class="error-message">
+        <p>{{ error }}</p>
+      </div>
+    </main>
   </div>
 </template>
 
@@ -33,55 +37,102 @@ export default {
       city: "",
       weather: null,
       error: null,
-      apiKey: "5a6d6ba588d803c097c55e2bdf780528", // replace with your actual API key
+      loading: false,
+      apiKey: process.env.VUE_APP_OPENWEATHER_KEY,
     };
   },
   methods: {
     async fetchWeather()
     {
-      if (this.city === "")
+      const city = this.city.trim();
+      if (!city)
       {
         this.error = "Please enter a city name!";
         return;
       }
 
-      const url = `https://api.openweathermap.org/data/2.5/weather?q=${this.city}&units=metric&appid=${this.apiKey}`;
+      this.loading = true;
+      this.error = null;
+
+      const url = `https://api.openweathermap.org/data/2.5/weather` + `?q=${encodeURIComponent(city)}&units=metric&appid=${this.apiKey}`;
 
       try
       {
         const response = await fetch(url);
         const data = await response.json();
 
-        if (data.cod === 200)
+        if (!response.ok)
         {
-          this.weather = data;
-          this.error = null;
-        } else
-        {
-          this.error = data.message;
+          this.weather = null;
+          this.error = data.message || "Something went wrong";
+          return;
         }
+
+        this.weather = data;
       } catch (err)
       {
+        this.weather = null;
         this.error = "Error fetching data. Please try again later.";
+      } finally
+      {
+        this.loading = false;
       }
-      if (this.weather.weather[0].main === 'Clear')
-      {
-        document.body.style.backgroundColor = '#87CEEB'; // Light Blue
-      } else if (this.weather.weather[0].main === 'Clouds')
-      {
-        document.body.style.backgroundColor = '#D3D3D3'; // Light Gray
-      } else if (this.weather.weather[0].main === 'Rain')
-      {
-        document.body.style.backgroundColor = '#A9A9A9'; // Dark Gray
-      }
-
     },
   },
+  computed: {
+    weatherClass()
+    {
+      if (!this.weather) return "weather--default";
+      return `weather--${this.weather.weather[0].main.toLowerCase()}`;
+    },
+  }
 };
 </script>
 
 <style scoped>
 /* General Styles */
+.weather-app {
+  min-height: 100vh;
+  transition: background 0.6s ease;
+  padding: 20px;
+  text-align: center;
+}
+
+.card {
+  max-width: 500px;
+  margin: 0 auto;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.weather--default {
+  background: #f0f8ff;
+}
+
+.weather--clear {
+  background: #87ceeb;
+}
+
+.weather--clouds {
+  background: #d3d3d3;
+}
+
+.weather--rain,
+.weather--drizzle {
+  background: #a9a9a9;
+}
+
+.weather--snow {
+  background: #eef6fb;
+}
+
+.weather--thunderstorm {
+  background: #5b5470;
+}
+
+
 body {
   font-family: 'Poppins', sans-serif;
   background-color: #f0f8ff;
