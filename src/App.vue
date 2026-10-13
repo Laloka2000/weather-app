@@ -1,13 +1,13 @@
 <template>
   <div class="weather-app" :class="weatherClass">
-    <main class="card"> 
+    <main class="card">
       <h1 class="app-title">Weather App 🌤</h1>
 
-      <SearchBar :loading="loading" @search="fetchWeather"/>
+      <SearchBar :loading="loading" @search="fetchWeather" />
 
       <template v-if="weather">
-        <CurrentWeather :weather="weather"/>
-        <WeatherDetails :weather="weather"/>
+        <CurrentWeather :weather="weather" />
+        <WeatherDetails :weather="weather" />
       </template>
 
       <ErrorMessage v-if="error">{{ error }}</ErrorMessage>
@@ -16,11 +16,11 @@
 </template>
 
 <script>
-import CurrentWeather from './components/CurrentWeather.vue';
-import ErrorMessage from './components/ErrorMessage.vue';
-import SearchBar from './components/SearchBar.vue';
-import WeatherDetails from './components/WeatherDetails.vue';
-import { getCurrentWeather } from './services/weatherApi';
+import CurrentWeather from "./components/CurrentWeather.vue";
+import ErrorMessage from "./components/ErrorMessage.vue";
+import SearchBar from "./components/SearchBar.vue";
+import WeatherDetails from "./components/WeatherDetails.vue";
+import { getCurrentWeather } from "./services/weatherApi";
 
 export default {
   name: "App",
@@ -30,8 +30,7 @@ export default {
     WeatherDetails,
     ErrorMessage,
   },
-  data()
-  {
+  data() {
     return {
       weather: null,
       error: null,
@@ -39,8 +38,7 @@ export default {
     };
   },
   computed: {
-    weatherClass()
-    {
+    weatherClass() {
       if (!this.weather) return "weather--default";
       return `weather--${this.weather.weather[0].main.toLowerCase()}`;
     },
