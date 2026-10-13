@@ -1,22 +1,30 @@
 <template>
   <div class="weather-app" :class="weatherClass">
-    <main class="card">
-      <h1 class="app-title">Weather App 🌤</h1>
+    <div class="container">
+      <header class="app-header">
+        <h1 class="app-title">
+          <i class="fas fa-cloud-sun" aria-hidden="true"></i>
+          Weather
+        </h1>
+        <SearchBar :loading="loading" @search="fetchWeather" />
+      </header>
 
-      <SearchBar :loading="loading" @search="fetchWeather" />
+      <main class="app-main">
+        <ErrorMessage v-if="error">{{ error }}</ErrorMessage>
+        <div v-if="weather" class="weather-layout">
+          <CurrentWeather :weather="weather" />
+          <WeatherDetails :weather="weather" />
+        </div>
 
-      <template v-if="weather">
-        <CurrentWeather :weather="weather" />
-        <WeatherDetails :weather="weather" />
-      </template>
-
-      <ErrorMessage v-if="error">{{ error }}</ErrorMessage>
-    </main>
+        <EmptyState v-else-if="!error" />
+      </main>
+    </div>
   </div>
 </template>
 
 <script>
 import CurrentWeather from "./components/CurrentWeather.vue";
+import EmptyState from "./components/EmptyState.vue";
 import ErrorMessage from "./components/ErrorMessage.vue";
 import SearchBar from "./components/SearchBar.vue";
 import WeatherDetails from "./components/WeatherDetails.vue";
@@ -29,8 +37,10 @@ export default {
     CurrentWeather,
     WeatherDetails,
     ErrorMessage,
+    EmptyState,
   },
-  data() {
+  data()
+  {
     return {
       weather: null,
       error: null,
@@ -38,14 +48,17 @@ export default {
     };
   },
   computed: {
-    weatherClass() {
+    weatherClass()
+    {
       if (!this.weather) return "weather--default";
       return `weather--${this.weather.weather[0].main.toLowerCase()}`;
     },
   },
   methods: {
-    async fetchWeather(city) {
-      if (!city) {
+    async fetchWeather(city)
+    {
+      if (!city)
+      {
         this.error = "Please enter a city name!";
         return;
       }
@@ -53,12 +66,15 @@ export default {
       this.loading = true;
       this.error = null;
 
-      try {
+      try
+      {
         this.weather = await getCurrentWeather(city);
-      } catch (err) {
+      } catch (err)
+      {
         this.weather = null;
         this.error = err.message;
-      } finally {
+      } finally
+      {
         this.loading = false;
       }
     },
@@ -69,54 +85,63 @@ export default {
 <style scoped>
 .weather-app {
   min-height: 100vh;
-  padding: var(--space-5);
-  text-align: center;
+  padding: var(--space-6) var(--space-4);
   background: var(--sky-default);
   transition: background var(--transition-slow);
 }
 
-.card {
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
   max-width: var(--container-width);
   margin: 0 auto;
-  padding: var(--space-6);
-  background-color: var(--color-surface);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
+}
+
+.app-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
 }
 
 .app-title {
-  font-size: var(--font-size-2xl);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold);
   color: var(--color-heading);
-  margin-bottom: var(--space-5);
 }
 
-.weather--clear {
-  background: var(--sky-clear);
+.app-title .fas {
+  color: var(--color-accent);
 }
 
-.weather--clouds {
-  background: var(--sky-clouds);
+.app-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
 }
 
-.weather--rain,
-.weather--drizzle {
-  background: var(--sky-rain);
+.weather-layout {
+  display: grid;
+  gap: var(--space-4);
 }
 
-.weather--snow {
-  background: var(--sky-snow);
-}
+@media (min-width: 768px) {
+  .weather-app {
+    padding: var(--space-8) var(--space-6);
+  }
 
-.weather--thunderstorm {
-  background: var(--sky-thunderstorm);
-}
+  .app-header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
 
-.weather--mist,
-.weather--fog,
-.weather--haze,
-.weather--smoke,
-.weather--dust {
-  background: var(--sky-mist);
+  .weather-layout {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    align-items: start;
+  }
 }
 </style>
