@@ -67,51 +67,56 @@ export default {
 </script>
 
 <style scoped>
-/* General Styles */
 .weather-app {
   min-height: 100vh;
-  transition: background 0.6s ease;
-  padding: 20px;
+  padding: var(--space-5);
   text-align: center;
+  background: var(--sky-default);
+  transition: background var(--transition-slow);
 }
 
 .card {
-  max-width: 500px;
+  max-width: var(--container-width);
   margin: 0 auto;
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
+  padding: var(--space-6);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
 }
 
-.weather--default {
-  background: #f0f8ff;
+.app-title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-heading);
+  margin-bottom: var(--space-5);
 }
 
 .weather--clear {
-  background: #87ceeb;
+  background: var(--sky-clear);
 }
 
 .weather--clouds {
-  background: #d3d3d3;
+  background: var(--sky-clouds);
 }
 
 .weather--rain,
 .weather--drizzle {
-  background: #a9a9a9;
+  background: var(--sky-rain);
 }
 
 .weather--snow {
-  background: #eef6fb;
+  background: var(--sky-snow);
 }
 
 .weather--thunderstorm {
-  background: #5b5470;
+  background: var(--sky-thunderstorm);
 }
 
-.app-title {
-  font-size: 2em;
-  color: #2c3e50;
-  margin-bottom: 20px;
+.weather--mist,
+.weather--fog,
+.weather--haze,
+.weather--smoke,
+.weather--dust {
+  background: var(--sky-mist);
 }
 </style>

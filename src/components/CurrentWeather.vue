@@ -27,27 +27,30 @@ export default {
 
 <style scoped>
 .current-weather {
-  margin-top: 20px;
+  margin-top: var(--space-5);
 }
 
 .location {
-  font-size: 1.5em;
-  color: #34495e;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-heading);
 }
 
 .location .fas {
-  color: #2980b9;
-  margin-right: 5px;
+  color: var(--color-accent);
+  margin-right: var(--space-1);
 }
 
 .temperature {
-  font-size: 3em;
-  font-weight: 300;
-  margin: 10px 0 0;
+  font-size: var(--font-size-display);
+  font-weight: var(--font-weight-light);
+  line-height: 1.1;
+  margin-top: var(--space-2);
+  font-variant-numeric: tabular-nums;
 }
 
 .description {
+  color: var(--color-text-muted);
   text-transform: capitalize;
-  margin-top: 0;
 }
 </style>

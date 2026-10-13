@@ -33,33 +33,40 @@ export default {
 <style scoped>
 .search-container {
   display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
+  gap: var(--space-2);
+  margin-bottom: var(--space-5);
 }
 
 .city-input {
-  padding: 10px;
-  font-size: 1em;
-  border: 2px solid #2c3e50;
-  border-radius: 5px;
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-3);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.city-input:focus-visible {
   outline: none;
-  width: 70%;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-focus-ring);
 }
 
 .search-btn {
-  padding: 10px 20px;
-  font-size: 1em;
-  background-color: #3498db;
-  color: white;
+  padding: var(--space-3) var(--space-5);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-on-primary);
+  background-color: var(--color-primary);
   border: none;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  margin-left: 10px;
-  transition: background-color 0.3s;
+  transition: background-color var(--transition-base);
 }
 
-.search-btn:hover {
-  background-color: #2980b9;
+.search-btn:hover:not(:disabled) {
+  background-color: var(--color-primary-hover);
 }
 
 .search-btn:disabled {

@@ -39,24 +39,32 @@ export default {
 .weather-details {
   list-style: none;
   padding: 0;
-  margin: 20px 0 0;
+  margin: var(--space-5) 0 0;
 }
 
 .detail {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 1.1em;
-  margin: 6px 0;
+  gap: var(--space-2);
+  padding: var(--space-2) 0;
+  font-size: var(--font-size-md);
+}
+
+.detail + .detail {
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .detail .fas {
-  color: #2980b9;
   width: 20px;
+  color: var(--color-accent);
+}
+
+.detail-label {
+  color: var(--color-text-muted);
 }
 
 .detail-value {
   margin-left: auto;
-  font-weight: 600;
+  font-weight: var(--font-weight-bold);
 }
 </style>

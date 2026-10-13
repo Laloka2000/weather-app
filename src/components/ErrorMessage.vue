@@ -12,7 +12,7 @@ export default {
 
 <style scoped>
 .error-message {
-  color: #c0392b;
-  margin-top: 20px;
+  margin-top: var(--space-5);
+  color: var(--color-danger);
 }
 </style>

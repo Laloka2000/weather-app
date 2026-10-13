@@ -1,3 +1,75 @@
+/* ==========================================================================
+   Design tokens
+   ========================================================================== */
+:root {
+  /* Colors */
+  --color-text: #1f2d3d;
+  --color-text-muted: #5b6b7c;
+  --color-heading: #2c3e50;
+  --color-primary: #3498db;
+  --color-primary-hover: #2980b9;
+  --color-on-primary: #ffffff;
+  --color-accent: #2980b9;
+  --color-danger: #c0392b;
+  --color-surface: #ffffff;
+  --color-border: #2c3e50;
+  --color-focus-ring: rgba(52, 152, 219, 0.35);
+
+  /* Sky backgrounds (a 4. fázisban ezekből lesznek színátmenetek) */
+  --sky-default: #f0f8ff;
+  --sky-clear: #87ceeb;
+  --sky-clouds: #d3d3d3;
+  --sky-rain: #a9a9a9;
+  --sky-snow: #eef6fb;
+  --sky-thunderstorm: #5b5470;
+  --sky-mist: #c9d1d9;
+
+  /* Typography */
+  --font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.25rem;
+  --font-size-xl: 1.5rem;
+  --font-size-2xl: 2rem;
+  --font-size-display: 3rem;
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 600;
+  --line-height: 1.5;
+
+  /* Spacing (4px-es skála) */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-full: 999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.15);
+
+  /* Motion */
+  --transition-fast: 150ms ease;
+  --transition-base: 300ms ease;
+  --transition-slow: 600ms ease;
+
+  /* Layout */
+  --container-width: 500px;
+}
+
+/* ==========================================================================
+   Base styles
+   ========================================================================== */
 *,
 *::before,
 *::after {
@@ -6,6 +78,36 @@
 
 body {
   margin: 0;
-  font-family: "Poppins", sans-serif;
-  color: #333;
+  font-family: var(--font-family);
+  font-size: var(--font-size-md);
+  line-height: var(--line-height);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+button,
+input {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
 }
