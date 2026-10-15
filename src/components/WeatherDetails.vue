@@ -1,6 +1,6 @@
 <template>
   <ul class="weather-details">
-    <li v-for="item in details" :key="item.label" class="tile">
+    <li v-for="item in details" :key="item.label" class="tile glass">
       <span class="tile-label">
         <i class="fas" :class="item.icon" aria-hidden="true"></i>
         {{ item.label }}
@@ -55,9 +55,7 @@ export default {
   flex-direction: column;
   gap: var(--space-2);
   padding: var(--space-4);
-  background-color: var(--color-surface);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
 }
 
 .tile-label {

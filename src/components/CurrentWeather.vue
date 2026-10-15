@@ -1,5 +1,5 @@
 <template>
-  <section class="current-weather">
+  <section class="current-weather glass">
     <h2 class="location">
       <i class="fas fa-location-dot" aria-hidden="true"></i>
       {{ weather.name }}, {{ weather.sys.country }}
@@ -63,9 +63,7 @@ export default {
 .current-weather {
   padding: var(--space-6);
   text-align: center;
-  background-color: var(--color-surface);
   border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-md);
 }
 
 .location {

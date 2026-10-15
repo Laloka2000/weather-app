@@ -1,5 +1,5 @@
 <template>
-  <div class="weather-app" :class="weatherClass">
+  <div class="weather-app" :class="skyClass">
     <div class="container">
       <header class="app-header">
         <h1 class="app-title">
@@ -29,6 +29,7 @@ import ErrorMessage from "./components/ErrorMessage.vue";
 import SearchBar from "./components/SearchBar.vue";
 import WeatherDetails from "./components/WeatherDetails.vue";
 import { getCurrentWeather } from "./services/weatherApi";
+import { getSkyTheme } from "./utils/theme.js";
 
 export default {
   name: "App",
@@ -39,8 +40,7 @@ export default {
     ErrorMessage,
     EmptyState,
   },
-  data()
-  {
+  data() {
     return {
       weather: null,
       error: null,
@@ -48,17 +48,13 @@ export default {
     };
   },
   computed: {
-    weatherClass()
-    {
-      if (!this.weather) return "weather--default";
-      return `weather--${this.weather.weather[0].main.toLowerCase()}`;
+    skyClass() {
+      return getSkyTheme(this.weather);
     },
   },
   methods: {
-    async fetchWeather(city)
-    {
-      if (!city)
-      {
+    async fetchWeather(city) {
+      if (!city) {
         this.error = "Please enter a city name!";
         return;
       }
@@ -66,15 +62,12 @@ export default {
       this.loading = true;
       this.error = null;
 
-      try
-      {
+      try {
         this.weather = await getCurrentWeather(city);
-      } catch (err)
-      {
+      } catch (err) {
         this.weather = null;
         this.error = err.message;
-      } finally
-      {
+      } finally {
         this.loading = false;
       }
     },
@@ -84,10 +77,30 @@ export default {
 
 <style scoped>
 .weather-app {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   min-height: 100vh;
   padding: var(--space-6) var(--space-4);
-  background: var(--sky-default);
-  transition: background var(--transition-slow);
+  color: var(--color-text);
+  background: linear-gradient(180deg, var(--sky-top), var(--sky-bottom));
+  transition:
+    --sky-top var(--transition-sky),
+    --sky-bottom var(--transition-sky),
+    --sky-glow var(--transition-sky);
+}
+
+.weather-app::before {
+  content: "";
+  position: absolute;
+  top: -20vmax;
+  right: -15vmax;
+  z-index: -1;
+  width: 60vmax;
+  height: 60vmax;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--sky-glow), transparent 65%);
+  pointer-events: none;
 }
 
 .container {

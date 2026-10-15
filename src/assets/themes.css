@@ -1,0 +1,134 @@
+/* Animatable sky colors */
+
+@property --sky-top {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #2b6cb0;
+}
+
+@property --sky-bottom {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #4a90d9;
+}
+
+@property --sky-glow {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgba(255, 214, 107, 0.55);
+}
+
+/* Modes: dark sky (default) and light sky */
+
+.weather-app {
+  --color-text: #ffffff;
+  --color-heading: #ffffff;
+  --color-text-muted: rgba(255, 255, 255, 0.75);
+  --color-accent: #ffd56b;
+  --color-primary: #ffffff;
+  --color-primary-hover: rgba(255, 255, 255, 0.85);
+  --color-on-primary: #1f2d3d;
+  --color-focus-ring: rgba(255, 255, 255, 0.6);
+  --glass-bg: rgba(15, 23, 42, 0.22);
+  --glass-border: rgba(255, 255, 255, 0.18);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+}
+
+.sky--snow-day,
+.sky--mist-day {
+  --color-text: #1f2d3d;
+  --color-heading: #1f2d3d;
+  --color-text-muted: #4a5868;
+  --color-accent: #2b6cb0;
+  --color-primary: #1f2d3d;
+  --color-primary-hover: #2c3e50;
+  --color-on-primary: #ffffff;
+  --color-focus-ring: rgba(43, 108, 176, 0.4);
+  --glass-bg: rgba(255, 255, 255, 0.55);
+  --glass-border: rgba(255, 255, 255, 0.7);
+  --glass-shadow: 0 8px 32px rgba(31, 45, 61, 0.12);
+}
+
+/* Skies */
+.sky--default,
+.sky--clear-day {
+  --sky-top: #2b6cb0;
+  --sky-bottom: #4a90d9;
+  --sky-glow: rgba(255, 214, 107, 0.55);
+}
+
+.sky--clear-night {
+  --sky-top: #0b1026;
+  --sky-bottom: #2b2f5e;
+  --sky-glow: rgba(220, 225, 255, 0.22);
+}
+
+.sky--clouds-day {
+  --sky-top: #4a5d70;
+  --sky-bottom: #7f93a6;
+  --sky-glow: rgba(255, 255, 255, 0.2);
+}
+
+.sky--clouds-night {
+  --sky-top: #1c2533;
+  --sky-bottom: #3b4757;
+  --sky-glow: rgba(255, 255, 255, 0.08);
+}
+
+.sky--rain-day {
+  --sky-top: #2c3e50;
+  --sky-bottom: #4c6a85;
+  --sky-glow: rgba(255, 255, 255, 0.08);
+}
+
+.sky--rain-night {
+  --sky-top: #0f1a24;
+  --sky-bottom: #2a3a4a;
+  --sky-glow: rgba(255, 255, 255, 0.05);
+}
+
+.sky--thunderstorm-day {
+  --sky-top: #2d2640;
+  --sky-bottom: #5b4b7a;
+  --sky-glow: rgba(180, 140, 255, 0.22);
+}
+
+.sky--thunderstorm-night {
+  --sky-top: #120e1f;
+  --sky-bottom: #352a50;
+  --sky-glow: rgba(180, 140, 255, 0.15);
+}
+
+.sky--snow-day {
+  --sky-top: #a8c0d6;
+  --sky-bottom: #e6eef5;
+  --sky-glow: rgba(255, 255, 255, 0.7);
+}
+
+.sky--snow-night {
+  --sky-top: #2a3a55;
+  --sky-bottom: #5d7290;
+  --sky-glow: rgba(220, 230, 255, 0.18);
+}
+
+.sky--mist-day {
+  --sky-top: #9aa5ae;
+  --sky-bottom: #d5dbe0;
+  --sky-glow: rgba(255, 255, 255, 0.5);
+}
+
+.sky--mist-night {
+  --sky-top: #2f353b;
+  --sky-bottom: #59626b;
+  --sky-glow: rgba(255, 255, 255, 0.1);
+}
+
+/* Glass surface */
+
+.glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  backdrop-filter: blur(16px) saturate(140%);
+}

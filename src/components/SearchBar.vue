@@ -1,5 +1,5 @@
 <template>
-  <form class="search-container" role="search" @submit.prevent="onSubmit">
+  <form class="search-container glass" role="search" @submit.prevent="onSubmit">
     <i class="fas fa-magnifying-glass search-icon" aria-hidden="true"></i>
     <input v-model="city" class="city-input" placeholder="Enter city name" aria-label="City name" />
     <button type="submit" :disabled="loading" class="search-btn">
@@ -39,20 +39,14 @@ export default {
   gap: var(--space-2);
   width: 100%;
   padding: var(--space-1) var(--space-1) var(--space-1) var(--space-4);
-  background-color: var(--color-surface);
-  border: 2px solid transparent;
   border-radius: var(--radius-full);
-  box-shadow: var(--shadow-md);
-  transition:
-    border-color var(--transition-fast),
-    box-shadow var(--transition-fast);
+  transition: box-shadow var(--transition-fast);
 }
 
 .search-container:focus-within {
-  border-color: var(--color-primary);
   box-shadow:
     0 0 0 3px var(--color-focus-ring),
-    var(--shadow-md);
+    var(--glass-shadow);
 }
 
 .search-icon {
@@ -65,6 +59,10 @@ export default {
   padding: var(--space-2) 0;
   background: transparent;
   border: none;
+}
+
+.city-input::placeholder {
+  color: var(--color-text-muted);
 }
 
 .city-input:focus-visible {
