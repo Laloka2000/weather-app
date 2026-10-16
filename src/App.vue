@@ -6,14 +6,18 @@
           <i class="fas fa-cloud-sun" aria-hidden="true"></i>
           Weather
         </h1>
-        <SearchBar :loading="loading" @search="fetchWeather" />
+        <SearchBar :loading="loading" @search="searchCity" @locate="locateUser" />
       </header>
 
       <main class="app-main">
         <ErrorMessage v-if="error">{{ error }}</ErrorMessage>
+
         <div v-if="weather" class="weather-layout">
           <CurrentWeather :weather="weather" />
-          <WeatherDetails :weather="weather" />
+          <div class="weather-side">
+            <WeatherDetails :weather="weather" />
+            <ForecastList v-if="forecast" :forecast="forecast" />
+          </div>
         </div>
 
         <EmptyState v-else-if="!error" />
@@ -26,10 +30,12 @@
 import CurrentWeather from "./components/CurrentWeather.vue";
 import EmptyState from "./components/EmptyState.vue";
 import ErrorMessage from "./components/ErrorMessage.vue";
+import ForecastList from "./components/ForecastList.vue";
 import SearchBar from "./components/SearchBar.vue";
 import WeatherDetails from "./components/WeatherDetails.vue";
-import { getCurrentWeather } from "./services/weatherApi";
+import { getCurrentWeather, getForecast } from "./services/weatherApi";
 import { getSkyTheme } from "./utils/theme.js";
+import { getCurrentPosition } from "./services/geolocation.js";
 
 export default {
   name: "App",
@@ -39,10 +45,12 @@ export default {
     WeatherDetails,
     ErrorMessage,
     EmptyState,
+    ForecastList,
   },
   data() {
     return {
       weather: null,
+      forecast: null,
       error: null,
       loading: false,
     };
@@ -53,19 +61,45 @@ export default {
     },
   },
   methods: {
-    async fetchWeather(city) {
+    searchCity(city) {
       if (!city) {
         this.error = "Please enter a city name!";
         return;
       }
+      this.loadWeather({ city });
+    },
 
+    async locateUser() {
+      this.loading = true;
+      this.error = null;
+
+      let coords;
+
+      try {
+        coords = await getCurrentPosition();
+      } catch (err) {
+        this.error = err.message;
+        this.loading = false;
+        return;
+      }
+
+      await this.loadWeather(coords);
+    },
+
+    async loadWeather(query) {
       this.loading = true;
       this.error = null;
 
       try {
-        this.weather = await getCurrentWeather(city);
+        const [current, forecast] = await Promise.all([
+          getCurrentWeather(query),
+          getForecast(query),
+        ]);
+        this.weather = current;
+        this.forecast = forecast;
       } catch (err) {
         this.weather = null;
+        this.forecast = null;
         this.error = err.message;
       } finally {
         this.loading = false;
@@ -139,6 +173,13 @@ export default {
 .weather-layout {
   display: grid;
   gap: var(--space-4);
+}
+
+.weather-side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
 }
 
 @media (min-width: 768px) {

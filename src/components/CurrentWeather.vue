@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { formatLocalTime } from "@/utils/format";
+import { formatLocalTime, getIconUrl } from "@/utils/format";
 
 export default {
   name: "CurrentWeather",
@@ -44,7 +44,7 @@ export default {
       return this.weather.weather[0].description;
     },
     iconUrl() {
-      return `https://openweathermap.org/img/wn/${this.weather.weather[0].icon}@2x.png`;
+      return getIconUrl(this.weather.weather[0].icon);
     },
     localTime() {
       return formatLocalTime(this.weather.dt, this.weather.timezone, {

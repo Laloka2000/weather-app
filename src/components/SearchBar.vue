@@ -2,6 +2,16 @@
   <form class="search-container glass" role="search" @submit.prevent="onSubmit">
     <i class="fas fa-magnifying-glass search-icon" aria-hidden="true"></i>
     <input v-model="city" class="city-input" placeholder="Enter city name" aria-label="City name" />
+    <button
+      type="button"
+      class="locate-btn"
+      :disabled="loading"
+      aria-label="Use my location"
+      title="Use my location"
+      @click="$emit('locate')"
+    >
+      <i class="fas fa-location-crosshairs" aria-hidden="true"></i>
+    </button>
     <button type="submit" :disabled="loading" class="search-btn">
       <i v-if="loading" class="fas fa-spinner fa-spin" aria-hidden="true"></i>
       {{ loading ? "Loading..." : "Get Weather" }}
@@ -18,7 +28,7 @@ export default {
       default: false,
     },
   },
-  emits: ["search"],
+  emits: ["search", "locate"],
   data() {
     return {
       city: "",
@@ -33,6 +43,32 @@ export default {
 </script>
 
 <style scoped>
+.locate-btn {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  color: var(--color-text-muted);
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition:
+    color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.locate-btn:hover:not(:disabled) {
+  color: var(--color-text);
+  background-color: color-mix(in srgb, currentColor 12%, transparent);
+}
+
+.locate-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .search-container {
   display: flex;
   align-items: center;
