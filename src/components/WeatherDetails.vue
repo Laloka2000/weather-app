@@ -12,12 +12,18 @@
 
 <script>
 import { formatLocalTime } from "@/utils/format";
+import { convertTemp, formatWind } from "@/utils/units";
+
 export default {
   name: "WeatherDetails",
   props: {
     weather: {
       type: Object,
       required: true,
+    },
+    unit: {
+      type: String,
+      default: "C",
     },
   },
   computed: {
@@ -26,11 +32,11 @@ export default {
       return [
         {
           label: "Feels like",
-          value: `${Math.round(main.feels_like)}°C`,
+          value: `${convertTemp(main.feels_like, this.unit)}°${this.unit}`,
           icon: "fa-temperature-half",
         },
         { label: "Humidity", value: `${main.humidity}%`, icon: "fa-droplet" },
-        { label: "Wind", value: `${wind.speed} m/s`, icon: "fa-wind" },
+        { label: "Wind", value: formatWind(wind.speed, this.unit), icon: "fa-wind" },
         { label: "Pressure", value: `${main.pressure} hPa`, icon: "fa-gauge" },
         { label: "Sunrise", value: formatLocalTime(sys.sunrise, timezone), icon: "fa-sun" },
         { label: "Sunset", value: formatLocalTime(sys.sunset, timezone), icon: "fa-moon" },

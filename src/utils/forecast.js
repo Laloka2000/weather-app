@@ -36,8 +36,8 @@ export function getDailyForecast(forecast) {
       return {
         key,
         label: index === 0 ? "Today" : weekday,
-        min: Math.round(Math.min(...items.map((item) => item.main.temp_min))),
-        max: Math.round(Math.max(...items.map((item) => item.main.temp_max))),
+        min: Math.min(...items.map((item) => item.main.temp_min)),
+        max: Math.max(...items.map((item) => item.main.temp_max)),
         icon: midday.weather[0].icon,
         description: midday.weather[0].description,
       };

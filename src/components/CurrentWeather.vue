@@ -8,7 +8,9 @@
 
     <div class="temp-row">
       <img :src="iconUrl" :alt="description" class="weather-icon" width="100" height="100" />
-      <p class="temperature">{{ temperature }}<span class="unit">°C</span></p>
+      <p class="temperature">
+        {{ temperature }}<span class="unit">°{{ unit }}</span>
+      </p>
     </div>
 
     <p class="description">{{ description }}</p>
@@ -21,6 +23,7 @@
 
 <script>
 import { formatLocalTime, getIconUrl } from "@/utils/format";
+import { convertTemp } from "@/utils/units";
 
 export default {
   name: "CurrentWeather",
@@ -29,16 +32,20 @@ export default {
       type: Object,
       required: true,
     },
+    unit: {
+      type: String,
+      default: "C",
+    },
   },
   computed: {
     temperature() {
-      return Math.round(this.weather.main.temp);
+      return convertTemp(this.weather.main.temp, this.unit);
     },
     max() {
-      return Math.round(this.weather.main.temp_max);
+      return convertTemp(this.weather.main.temp_max, this.unit);
     },
     min() {
-      return Math.round(this.weather.main.temp_min);
+      return convertTemp(this.weather.main.temp_min, this.unit);
     },
     description() {
       return this.weather.weather[0].description;

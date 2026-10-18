@@ -6,17 +6,32 @@
           <i class="fas fa-cloud-sun" aria-hidden="true"></i>
           Weather
         </h1>
-        <SearchBar :loading="loading" @search="searchCity" @locate="locateUser" />
+        <div class="header-controls">
+          <SearchBar
+            class="header-search"
+            :loading="loading"
+            @search="searchCity"
+            @locate="locateUser"
+          />
+          <UnitToggle v-model="unit" />
+        </div>
       </header>
 
       <main class="app-main">
+        <RecentSearches
+          v-if="recent.length"
+          :cities="recent"
+          :loading="loading"
+          @select="searchCity"
+          @remove="removeCity"
+        />
         <ErrorMessage v-if="error">{{ error }}</ErrorMessage>
 
         <div v-if="weather" class="weather-layout">
-          <CurrentWeather :weather="weather" />
+          <CurrentWeather :weather="weather" :unit="unit" />
           <div class="weather-side">
-            <WeatherDetails :weather="weather" />
-            <ForecastList v-if="forecast" :forecast="forecast" />
+            <WeatherDetails :weather="weather" :unit="unit" />
+            <ForecastList v-if="forecast" :forecast="forecast" :unit="unit" />
           </div>
         </div>
 
@@ -36,6 +51,17 @@ import WeatherDetails from "./components/WeatherDetails.vue";
 import { getCurrentWeather, getForecast } from "./services/weatherApi";
 import { getSkyTheme } from "./utils/theme.js";
 import { getCurrentPosition } from "./services/geolocation.js";
+import UnitToggle from "./components/UnitToggle.vue";
+import RecentSearches from "./components/RecentSearches.vue";
+import { loadFromStorage, saveToStorage } from "./utils/storage.js";
+import { convertTemp, UNITS } from "./utils/units.js";
+
+const STORAGE_KEYS = {
+  unit: "weather-app:unit",
+  recent: "weather-app:recent",
+};
+
+const MAX_RECENT = 5;
 
 export default {
   name: "App",
@@ -46,18 +72,44 @@ export default {
     ErrorMessage,
     EmptyState,
     ForecastList,
+    UnitToggle,
+    RecentSearches,
   },
   data() {
+    const savedUnit = loadFromStorage(STORAGE_KEYS.unit, "C");
+    const savedRecent = loadFromStorage(STORAGE_KEYS.recent, []);
+
     return {
       weather: null,
       forecast: null,
       error: null,
       loading: false,
+      unit: UNITS.includes(savedUnit) ? savedUnit : "C",
+      recent: Array.isArray(savedRecent) ? savedRecent : [],
     };
   },
   computed: {
     skyClass() {
       return getSkyTheme(this.weather);
+    },
+    pageTitle() {
+      if (!this.weather) return "Weather App";
+      const temp = convertTemp(this.weather.main.temp, this.unit);
+      return `${temp}°${this.unit} · ${this.weather.name} | Weather App`;
+    },
+  },
+  watch: {
+    unit(value) {
+      saveToStorage(STORAGE_KEYS.unit, value);
+    },
+    recent(value) {
+      saveToStorage(STORAGE_KEYS.recent, value);
+    },
+    pageTitle: {
+      handler(title) {
+        document.title = title;
+      },
+      immediate: true,
     },
   },
   methods: {
@@ -86,6 +138,15 @@ export default {
       await this.loadWeather(coords);
     },
 
+    rememberCity(name) {
+      const others = this.recent.filter((city) => city.toLowerCase() !== name.toLowerCase());
+      this.recent = [name, ...others].slice(0, MAX_RECENT);
+    },
+
+    removeCity(name) {
+      this.recent = this.recent.filter((city) => city !== name);
+    },
+
     async loadWeather(query) {
       this.loading = true;
       this.error = null;
@@ -97,6 +158,7 @@ export default {
         ]);
         this.weather = current;
         this.forecast = forecast;
+        this.rememberCity(current.name);
       } catch (err) {
         this.weather = null;
         this.forecast = null;
@@ -135,6 +197,16 @@ export default {
   border-radius: 50%;
   background: radial-gradient(circle, var(--sky-glow), transparent 65%);
   pointer-events: none;
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.header-search {
+  flex: 1;
 }
 
 .container {
@@ -196,6 +268,10 @@ export default {
   .weather-layout {
     grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
     align-items: start;
+  }
+
+  .header-controls {
+    flex: 0 1 520px;
   }
 }
 </style>

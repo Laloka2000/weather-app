@@ -28,6 +28,7 @@
 <script>
 import { getDailyForecast } from "@/utils/forecast";
 import { getIconUrl } from "@/utils/format";
+import { convertTemp } from "@/utils/units";
 
 export default {
   name: "ForecastList",
@@ -36,10 +37,18 @@ export default {
       type: Object,
       required: true,
     },
+    unit: {
+      type: String,
+      default: "C",
+    },
   },
   computed: {
     days() {
-      return getDailyForecast(this.forecast);
+      return getDailyForecast(this.forecast).map((day) => ({
+        ...day,
+        min: convertTemp(day.min, this.unit),
+        max: convertTemp(day.max, this.unit),
+      }));
     },
     range() {
       return {
