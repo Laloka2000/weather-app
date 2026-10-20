@@ -25,17 +25,21 @@
           @select="searchCity"
           @remove="removeCity"
         />
-        <ErrorMessage v-if="error">{{ error }}</ErrorMessage>
+        <Transition name="fade">
+          <ErrorMessage v-if="error">{{ error }}</ErrorMessage>
+        </Transition>
 
-        <div v-if="weather" class="weather-layout">
-          <CurrentWeather :weather="weather" :unit="unit" />
-          <div class="weather-side">
-            <WeatherDetails :weather="weather" :unit="unit" />
-            <ForecastList v-if="forecast" :forecast="forecast" :unit="unit" />
+        <Transition name="fade" mode="out-in">
+          <WeatherSkeleton v-if="loading" />
+          <div v-else-if="weather" class="weather-layout">
+            <CurrentWeather :weather="weather" :unit="unit" />
+            <div class="weather-side">
+              <WeatherDetails :weather="weather" :unit="unit" />
+              <ForecastList v-if="forecast" :forecast="forecast" :unit="unit" />
+            </div>
           </div>
-        </div>
-
-        <EmptyState v-else-if="!error" />
+          <EmptyState v-else-if="!error" />
+        </Transition>
       </main>
     </div>
   </div>
@@ -55,6 +59,7 @@ import UnitToggle from "./components/UnitToggle.vue";
 import RecentSearches from "./components/RecentSearches.vue";
 import { loadFromStorage, saveToStorage } from "./utils/storage.js";
 import { convertTemp, UNITS } from "./utils/units.js";
+import WeatherSkeleton from "./components/WeatherSkeleton.vue";
 
 const STORAGE_KEYS = {
   unit: "weather-app:unit",
@@ -74,6 +79,7 @@ export default {
     ForecastList,
     UnitToggle,
     RecentSearches,
+    WeatherSkeleton,
   },
   data() {
     const savedUnit = loadFromStorage(STORAGE_KEYS.unit, "C");

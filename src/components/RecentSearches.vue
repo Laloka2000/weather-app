@@ -1,6 +1,6 @@
 <template>
   <section class="recent" aria-label="Recent searches">
-    <ul class="recent-list">
+    <TransitionGroup name="chip" tag="ul" class="recent-list">
       <li v-for="city in cities" :key="city" class="chip glass">
         <button type="button" class="chip-btn" :disabled="loading" @click="$emit('select', city)">
           <i class="fas fa-clock-rotate-left" aria-hidden="true"></i>
@@ -15,7 +15,7 @@
           <i class="fas fa-xmark" aria-hidden="true"></i>
         </button>
       </li>
-    </ul>
+    </TransitionGroup>
   </section>
 </template>
 
@@ -39,6 +39,7 @@ export default {
 <style scoped>
 .recent-list {
   display: flex;
+  position: relative;
   flex-wrap: wrap;
   gap: var(--space-2);
   margin: 0;
@@ -92,5 +93,26 @@ export default {
 .chip-remove:hover {
   color: var(--color-text);
   background-color: color-mix(in srgb, currentColor 12%, transparent);
+}
+
+.chip-enter-active,
+.chip-leave-active {
+  transition:
+    opacity var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.chip-enter-from,
+.chip-leave-to {
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+.chip-leave-active {
+  position: absolute;
+}
+
+.chip-move {
+  transition: transform var(--transition-base);
 }
 </style>

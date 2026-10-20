@@ -104,5 +104,26 @@ input {
   *::after {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
   }
+}
+
+/* =============== Transitions =================*/
+.fade-enter-active {
+  transition:
+    opacity var(--transition-base),
+    transform var(--transition-base);
+}
+
+.fade-leave-active {
+  transition: opacity var(--transition-fast);
+}
+
+.fade-enter-from {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.fade-leave-to {
+  opacity: 0;
 }
