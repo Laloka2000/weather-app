@@ -1,5 +1,5 @@
 <template>
-  <ul class="weather-details">
+  <ul class="weather-details" aria-label="Weather details">
     <li v-for="item in details" :key="item.label" class="tile glass">
       <span class="tile-label">
         <i class="fas" :class="item.icon" aria-hidden="true"></i>

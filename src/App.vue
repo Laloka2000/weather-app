@@ -17,7 +17,9 @@
         </div>
       </header>
 
-      <main class="app-main">
+      <main class="app-main" :aria-busy="loading">
+        <p class="sr-only" role="status">{{ statusMessage }}</p>
+
         <RecentSearches
           v-if="recent.length"
           :cities="recent"
@@ -102,6 +104,13 @@ export default {
       if (!this.weather) return "Weather App";
       const temp = convertTemp(this.weather.main.temp, this.unit);
       return `${temp}°${this.unit} · ${this.weather.name} | Weather App`;
+    },
+    statusMessage() {
+      if (this.loading) return "Loading weather...";
+      if (!this.weather) return "";
+      const temp = convertTemp(this.weather.main.temp, this.unit);
+      const description = this.weather.weather[0].description;
+      return `Showing weather for ${this.weather.name}: ${temp}°${this.unit}, ${description}`;
     },
   },
   watch: {

@@ -15,11 +15,11 @@
           width="40"
           height="40"
         />
-        <span class="day-min">{{ day.min }}°</span>
+        <span class="day-min"><span class="sr-only">Low </span>{{ day.min }}°</span>
         <span class="day-bar" aria-hidden="true">
           <span class="day-bar-fill" :style="barStyle(day)"></span>
         </span>
-        <span class="day-max">{{ day.max }}°</span>
+        <span class="day-max"><span class="sr-only">High </span>{{ day.max }}°</span>
       </li>
     </ol>
   </section>

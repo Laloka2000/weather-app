@@ -1,7 +1,16 @@
 <template>
   <form class="search-container glass" role="search" @submit.prevent="onSubmit">
     <i class="fas fa-magnifying-glass search-icon" aria-hidden="true"></i>
-    <input v-model="city" class="city-input" placeholder="Enter city name" aria-label="City name" />
+    <input
+      v-model="city"
+      type="search"
+      class="city-input"
+      placeholder="Enter city name"
+      aria-label="City name"
+      autocomplete="off"
+      spellcheck="false"
+      enterkeyhint="search"
+    />
     <button
       type="button"
       class="locate-btn"
@@ -95,6 +104,8 @@ export default {
   padding: var(--space-2) 0;
   background: transparent;
   border: none;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .city-input::placeholder {

@@ -7,7 +7,7 @@
     <p class="local-time">{{ localTime }}</p>
 
     <div class="temp-row">
-      <img :src="iconUrl" :alt="description" class="weather-icon" width="100" height="100" />
+      <img :src="iconUrl" alt="" class="weather-icon" width="100" height="100" />
       <p class="temperature">
         {{ temperature }}<span class="unit">°{{ unit }}</span>
       </p>
@@ -15,8 +15,8 @@
 
     <p class="description">{{ description }}</p>
     <p class="range">
-      <span>H: {{ max }}°</span>
-      <span>L: {{ min }}°</span>
+      <span><span aria-hidden="true">H:</span><span class="sr-only">High</span> {{ max }}°</span>
+      <span><span aria-hidden="true">L:</span><span class="sr-only">Low</span> {{ min }}°</span>
     </p>
   </section>
 </template>

@@ -2,7 +2,7 @@
   <section class="empty-state">
     <i class="fas fa-earth-europe empty-icon" aria-hidden="true"></i>
     <h2 class="empty-title">Search for a city</h2>
-    <p class="empty-text">Type a city name above to see the current weather.</p>
+    <p class="empty-text">Type a city name above or use your location to see the weather.</p>
   </section>
 </template>
 
