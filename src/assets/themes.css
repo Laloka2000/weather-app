@@ -30,6 +30,7 @@
   --color-on-primary: #1f2d3d;
   --color-focus-ring: rgba(255, 255, 255, 0.6);
   --glass-bg: rgba(15, 23, 42, 0.22);
+  --glass-bg-strong: rgba(15, 23, 42, 0.72);
   --glass-border: rgba(255, 255, 255, 0.18);
   --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
 }
@@ -45,6 +46,7 @@
   --color-on-primary: #ffffff;
   --color-focus-ring: rgba(43, 108, 176, 0.4);
   --glass-bg: rgba(255, 255, 255, 0.55);
+  --glass-bg-strong: rgba(255, 255, 255, 0.88);
   --glass-border: rgba(255, 255, 255, 0.7);
   --glass-shadow: 0 8px 32px rgba(31, 45, 61, 0.12);
 }

@@ -12,6 +12,7 @@
             :loading="loading"
             @search="searchCity"
             @locate="locateUser"
+            @select="selectPlace"
           />
           <UnitToggle v-model="unit" />
         </div>
@@ -128,6 +129,10 @@ export default {
     },
   },
   methods: {
+    selectPlace(place) {
+      this.loadWeather({ lat: place.lat, lon: place.lon });
+    },
+
     searchCity(city) {
       if (!city) {
         this.error = "Please enter a city name!";
