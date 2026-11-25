@@ -17,7 +17,9 @@ async function request(endpoint, query) {
   try {
     response = await fetch(`${BASE_URL}/${endpoint}?${params}`);
   } catch (err) {
-    throw new Error("Error fetching data. Please try again later");
+    const error = new Error("Error fetching data. Please try again later");
+    error.isNetworkError = true;
+    throw error;
   }
 
   const data = await response.json();

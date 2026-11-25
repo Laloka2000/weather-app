@@ -6,16 +6,14 @@
           <i class="fas fa-cloud-sun" aria-hidden="true"></i>
           Weather
         </h1>
-        <div class="header-controls">
-          <SearchBar
-            class="header-search"
-            :loading="loading"
-            @search="searchCity"
-            @locate="locateUser"
-            @select="selectPlace"
-          />
-          <UnitToggle v-model="unit" />
-        </div>
+        <SearchBar
+          class="header-search"
+          :loading="loading"
+          @search="searchCity"
+          @locate="locateUser"
+          @select="selectPlace"
+        />
+        <UnitToggle v-model="unit" />
       </header>
 
       <main class="app-main" :aria-busy="loading">
@@ -28,6 +26,13 @@
           @select="searchCity"
           @remove="removeCity"
         />
+
+        <OfflineNotice
+          v-if="offlineNotice && weather"
+          :city="weather.name"
+          :save-at="offlineNotice"
+        />
+
         <Transition name="fade">
           <ErrorMessage v-if="error">{{ error }}</ErrorMessage>
         </Transition>
@@ -63,16 +68,19 @@ import RecentSearches from "./components/RecentSearches.vue";
 import { loadFromStorage, saveToStorage } from "./utils/storage.js";
 import { convertTemp, UNITS } from "./utils/units.js";
 import WeatherSkeleton from "./components/WeatherSkeleton.vue";
+import OfflineNotice from "./components/OfflineNotice.vue";
 
 const STORAGE_KEYS = {
   unit: "weather-app:unit",
   recent: "weather-app:recent",
+  lastWeather: "weather-app:last-weather",
 };
 
 const MAX_RECENT = 5;
 
 export default {
   name: "App",
+
   components: {
     SearchBar,
     CurrentWeather,
@@ -83,7 +91,9 @@ export default {
     UnitToggle,
     RecentSearches,
     WeatherSkeleton,
+    OfflineNotice,
   },
+
   data() {
     const savedUnit = loadFromStorage(STORAGE_KEYS.unit, "C");
     const savedRecent = loadFromStorage(STORAGE_KEYS.recent, []);
@@ -92,11 +102,13 @@ export default {
       weather: null,
       forecast: null,
       error: null,
+      offlineSince: null,
       loading: false,
       unit: UNITS.includes(savedUnit) ? savedUnit : "C",
       recent: Array.isArray(savedRecent) ? savedRecent : [],
     };
   },
+
   computed: {
     skyClass() {
       return getSkyTheme(this.weather);
@@ -109,11 +121,14 @@ export default {
     statusMessage() {
       if (this.loading) return "Loading weather...";
       if (!this.weather) return "";
+      if (this.offlineSince)
+        return `You're offline. Showing saved weather for ${this.weather.name}`;
       const temp = convertTemp(this.weather.main.temp, this.unit);
       const description = this.weather.weather[0].description;
       return `Showing weather for ${this.weather.name}: ${temp}°${this.unit}, ${description}`;
     },
   },
+
   watch: {
     unit(value) {
       saveToStorage(STORAGE_KEYS.unit, value);
@@ -128,6 +143,22 @@ export default {
       immediate: true,
     },
   },
+
+  created() {
+    if (!navigator.onLine) this.showSavedWeather();
+  },
+
+  showSavedWeather() {
+    const saved = loadFromStorage(STORAGE_KEYS.lastWeather, null);
+    if (!saved || !saved.weather) return false;
+
+    this.weather = saved.weather;
+    this.forecast = saved.forecast;
+    this.offlineNotice = saved.saveAt;
+    this.error = null;
+    return true;
+  },
+
   methods: {
     selectPlace(place) {
       this.loadWeather({ lat: place.lat, lon: place.lon });
@@ -178,8 +209,16 @@ export default {
         ]);
         this.weather = current;
         this.forecast = forecast;
+        this.offlineSince = null;
         this.rememberCity(current.name);
+        saveToStorage(STORAGE_KEYS.lastWeather, {
+          weather: current,
+          forecast,
+          savedAt: Date.now(),
+        });
       } catch (err) {
+        if (err.isNetworkError && this.showSavedWeather()) return;
+
         this.weather = null;
         this.forecast = null;
         this.error = err.message;
@@ -219,14 +258,13 @@ export default {
   pointer-events: none;
 }
 
-.header-controls {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
+.header-search {
+  grid-area: search;
+  min-width: 0;
 }
 
-.header-search {
-  flex: 1;
+.header-unit {
+  grid-area: unit;
 }
 
 .container {
@@ -238,14 +276,19 @@ export default {
 }
 
 .app-header {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "title unit"
+    "search search";
+  align-items: center;
+  gap: var(--space-4) var(--space-3);
 }
 
 .app-title {
   display: flex;
   align-items: center;
+  grid-area: title;
   gap: var(--space-2);
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold);
@@ -280,9 +323,8 @@ export default {
   }
 
   .app-header {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
+    grid-template-columns: 1fr minmax(0, 420px) auto;
+    grid-template-areas: "title search unit";
   }
 
   .weather-layout {
