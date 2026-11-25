@@ -8,13 +8,15 @@
     <ol class="forecast-list">
       <li v-for="day in days" :key="day.key" class="forecast-day">
         <span class="day-label">{{ day.label }}</span>
-        <img
-          :src="iconUrl(day.icon)"
-          :alt="day.description"
-          class="day-icon"
-          width="40"
-          height="40"
-        />
+        <IconTooltip :text="day.description">
+          <img
+            :src="iconUrl(day.icon)"
+            :alt="day.description"
+            class="day-icon"
+            width="40"
+            height="40"
+          />
+        </IconTooltip>
         <span class="day-min"><span class="sr-only">Low </span>{{ day.min }}°</span>
         <span class="day-bar" aria-hidden="true">
           <span class="day-bar-fill" :style="barStyle(day)"></span>
@@ -29,9 +31,13 @@
 import { getDailyForecast } from "@/utils/forecast";
 import { getIconUrl } from "@/utils/format";
 import { convertTemp } from "@/utils/units";
+import IconTooltip from "./IconTooltip.vue";
 
 export default {
   name: "ForecastList",
+  components: {
+    IconTooltip,
+  },
   props: {
     forecast: {
       type: Object,
