@@ -14,7 +14,7 @@ module.exports = {
       favicon16: null,
       appleTouchIcon: "apple-touch-icon-180x180.png",
       maskIcon: null,
-      msTileIcon: null,
+      msTileImage: null,
     },
     manifestOptions: {
       short_name: "Weather",

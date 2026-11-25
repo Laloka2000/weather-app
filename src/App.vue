@@ -13,7 +13,7 @@
           @locate="locateUser"
           @select="selectPlace"
         />
-        <UnitToggle v-model="unit" />
+        <UnitToggle class="header-unit" v-model="unit" />
       </header>
 
       <main class="app-main" :aria-busy="loading">
@@ -28,9 +28,9 @@
         />
 
         <OfflineNotice
-          v-if="offlineNotice && weather"
+          v-if="offlineSince && weather"
           :city="weather.name"
-          :save-at="offlineNotice"
+          :saved-at="offlineSince"
         />
 
         <Transition name="fade">
@@ -148,20 +148,20 @@ export default {
     if (!navigator.onLine) this.showSavedWeather();
   },
 
-  showSavedWeather() {
-    const saved = loadFromStorage(STORAGE_KEYS.lastWeather, null);
-    if (!saved || !saved.weather) return false;
-
-    this.weather = saved.weather;
-    this.forecast = saved.forecast;
-    this.offlineNotice = saved.saveAt;
-    this.error = null;
-    return true;
-  },
-
   methods: {
     selectPlace(place) {
       this.loadWeather({ lat: place.lat, lon: place.lon });
+    },
+
+    showSavedWeather() {
+      const saved = loadFromStorage(STORAGE_KEYS.lastWeather, null);
+      if (!saved || !saved.weather) return false;
+
+      this.weather = saved.weather;
+      this.forecast = saved.forecast;
+      this.offlineSince = saved.savedAt;
+      this.error = null;
+      return true;
     },
 
     searchCity(city) {
